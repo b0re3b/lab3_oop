@@ -1,4 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
+        android:id="@+id/action_new_game"
+        android:icon="@drawable/ic_new_game"
+        android:title="New Game"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="Settings"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_difficulty"
+        android:title="AI Difficulty">
+        <menu>
+            <item
+                android:id="@+id/difficulty_easy"
+                android:title="Easy"
+                android:checkable="true"/>
+
+            <item
+                android:id="@+id/difficulty_medium"
+                android:title="Medium"
+                android:checkable="true"/>
+
+            <item
+                android:id="@+id/difficulty_hard"
+                android:title="Hard"
+                android:checkable="true"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_game_mode"
+        android:title="Game Mode">
+        <menu>
+            <item
+                android:id="@+id/mode_human_vs_human"
+                android:title="Human vs Human"
+                android:checkable="true"/>
+
+            <item
+                android:id="@+id/mode_human_vs_ai"
+                android:title="Human vs AI"
+                android:checkable="true"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_help"
+        android:icon="@drawable/ic_help"
+        android:title="How to Play"
+        app:showAsAction="ifRoom"/>
 </menu>

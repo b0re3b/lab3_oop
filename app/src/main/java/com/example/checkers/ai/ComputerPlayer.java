@@ -6,24 +6,20 @@ import com.example.checkers.model.Player;
 import com.example.checkers.utils.MoveValidator;
 
 public class ComputerPlayer extends Player {
-    private AIStrategy strategy;
-    private AIStrategy.Difficulty difficulty;
+    private BasicStrategy strategy; // Використовуємо BasicStrategy
 
     // Конструктор
-    public ComputerPlayer(String name, Piece.Color color,
-                          AIStrategy strategy,
-                          AIStrategy.Difficulty difficulty) {
+    public ComputerPlayer(String name, Piece.Color color) {
         super(name, color);
-        this.strategy = strategy;
-        this.difficulty = difficulty;
+        this.strategy = new BasicStrategy(); // Ініціалізуємо конкретну стратегію
     }
 
     @Override
     public boolean makeMove(Board board, int fromRow, int fromCol, int toRow, int toCol) {
-        // Вибираємо хід за допомогою стратегії ШІ
+        // Вибираємо хід за допомогою BasicStrategy
         AIStrategy.Move bestMove = strategy.chooseMove(board, getColor());
 
-        // Перевіряємо валідність ходу
+        // Перевірка валідності ходу
         if (bestMove != null &&
                 MoveValidator.isValidMove(board, this,
                         bestMove.fromRow, bestMove.fromCol,
@@ -49,7 +45,6 @@ public class ComputerPlayer extends Player {
 
     // Метод для перевірки та захоплення шашок суперника
     private void checkAndCapturePieces(Board board, AIStrategy.Move move) {
-        // Логіка захоплення шашок
         int capturedRow = (move.fromRow + move.toRow) / 2;
         int capturedCol = (move.fromCol + move.toCol) / 2;
 
@@ -61,14 +56,5 @@ public class ComputerPlayer extends Player {
             board.removePieceAt(capturedRow, capturedCol);
             incrementCapturedPieces();
         }
-    }
-
-    // Додаткові методи для налаштування складності ШІ
-    public void setDifficulty(AIStrategy.Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    public AIStrategy.Difficulty getDifficulty() {
-        return difficulty;
     }
 }
