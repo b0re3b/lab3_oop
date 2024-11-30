@@ -7,9 +7,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.example.checkers.ai.ComputerPlayer;
 import com.example.checkers.ai.BasicStrategy;
-import com.example.checkers.ai.AIStrategy;
 import com.example.checkers.controller.GameController;
 import com.example.checkers.model.Piece;
 import com.example.checkers.model.Player;
@@ -70,13 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Створення комп'ютерного гравця
     private Player createComputerPlayer() {
-        AIStrategy aiStrategy = new BasicAIStrategy();
-        return new ComputerPlayer(
-                "Комп'ютер",
-                Piece.Color.WHITE,
-                aiStrategy,
-                AIStrategy.Difficulty.MEDIUM
-        );
+        BasicStrategy basicStrategy = new BasicStrategy();
+        return new ComputerPlayer("Комп'ютер", Piece.Color.WHITE, basicStrategy);
     }
 
     // Обробка ходу гравця

@@ -8,11 +8,7 @@
         android:title="New Game"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/ic_settings"
-        android:title="Settings"
-        app:showAsAction="ifRoom"/>
+
 
     <item
         android:id="@+id/action_difficulty"
@@ -51,9 +47,5 @@
         </menu>
     </item>
 
-    <item
-        android:id="@+id/action_help"
-        android:icon="@drawable/ic_help"
-        android:title="How to Play"
-        app:showAsAction="ifRoom"/>
+
 </menu>

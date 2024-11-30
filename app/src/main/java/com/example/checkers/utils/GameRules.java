@@ -4,8 +4,7 @@ import com.example.checkers.model.Board;
 import com.example.checkers.model.Piece;
 
 public class GameRules {
-    // Максимальна кількість ходів без захоплення шашок
-    private static final int MAX_MOVES_WITHOUT_CAPTURE = 40;
+
 
     // Перевірка умов нічиєї
     public static boolean isDrawCondition(Board board) {

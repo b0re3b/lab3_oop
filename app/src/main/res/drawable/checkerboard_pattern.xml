@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-    android:src="@drawable/checkerboard_tile"
-    android:tileMode="repeat"/>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <size android:width="16dp" android:height="16dp"/>
+            <solid android:color="#FFFFFF" /> <!-- Білий колір -->
+        </shape>
+    </item>
+    <item android:left="8dp" android:top="8dp">
+        <shape android:shape="rectangle">
+            <size android:width="16dp" android:height="16dp"/>
+            <solid android:color="#000000" /> <!-- Чорний колір -->
+        </shape>
+    </item>
+</layer-list>

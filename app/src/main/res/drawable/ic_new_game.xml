@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Коло для позначення кнопки -->
+    <path
+        android:fillColor="#4CAF50"
+    android:pathData="M12,2A10,10 0 1,0 22,12A10,10 0 1,0 12,2Z" />
+
+    <!-- Стрілка для позначення дії перезапуску -->
+    <path
+        android:fillColor="#FFFFFF"
+    android:pathData="M12,6L12,9L15,9L10.5,13.5L6,9L9,9L9,6L12,6Z" />
+</vector>

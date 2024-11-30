@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Основний шар: шаховий візерунок -->
+    <item>
+        <bitmap
+            android:src="@drawable/checkerboard_pattern"
+            android:tileMode="repeat" />
+    </item>
+
+    <!-- Напівпрозорий шар для затемнення -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#80000000" /> <!-- Чорний з прозорістю (50%) -->
+        </shape>
+    </item>
+
+    <!-- Рамка для дошки -->
+    <item>
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="4dp"
+                android:color="#5D4037" /> <!-- Темно-коричнева рамка -->
+        </shape>
+    </item>
+</layer-list>
