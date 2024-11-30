@@ -71,11 +71,7 @@ public class MoveValidator {
         }
 
         // Захоплення шашки (стрибок через шашку)
-        if (rowDiff == 2 && colDiff == 2) {
-            return true;
-        }
-
-        return false;
+        return rowDiff == 2 && colDiff == 2;
     }
 
     // Перевірка захоплення шашок

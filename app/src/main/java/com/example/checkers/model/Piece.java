@@ -12,7 +12,7 @@ public class Piece {
         REGULAR, KING
     }
 
-    private Color color;
+    private final Color color;
     private Type type;
     private boolean isAlive;
 

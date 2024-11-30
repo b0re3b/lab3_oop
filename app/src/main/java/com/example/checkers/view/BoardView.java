@@ -1,5 +1,6 @@
 package com.example.checkers.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,11 +11,11 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.checkers.R;
 import com.example.checkers.controller.GameController;
 import com.example.checkers.model.Board;
 import com.example.checkers.model.Piece;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.List;
@@ -105,7 +106,7 @@ public class BoardView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
         // Calculate square size
@@ -118,7 +119,7 @@ public class BoardView extends View {
                 Paint squarePaint = (row + col) % 2 == 0 ? lightSquarePaint : darkSquarePaint;
 
                 // Draw square
-                RectF square = new RectF(
+                @SuppressLint("DrawAllocation") RectF square = new RectF(
                         col * squareSize,
                         row * squareSize,
                         (col + 1) * squareSize,
@@ -195,6 +196,7 @@ public class BoardView extends View {
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {

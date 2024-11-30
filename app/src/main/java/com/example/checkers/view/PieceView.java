@@ -1,5 +1,6 @@
 package com.example.checkers.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,8 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.example.checkers.R;
 import com.example.checkers.model.Piece;
@@ -20,7 +23,6 @@ public class PieceView extends View {
     // Paint objects for drawing
     private Paint piecePaint;
     private Paint highlightPaint;
-    private Paint kingMarkPaint;
 
     // Piece representation
     private Piece piece;
@@ -63,7 +65,7 @@ public class PieceView extends View {
         highlightPaint.setColor(Color.YELLOW);
 
         // King marker paint
-        kingMarkPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        Paint kingMarkPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         kingMarkPaint.setStyle(Paint.Style.FILL);
         kingMarkPaint.setColor(Color.rgb(255, 215, 0));
     }
@@ -114,7 +116,7 @@ public class PieceView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
         if (piece == null) {
@@ -138,13 +140,13 @@ public class PieceView extends View {
         // Draw king marker if piece is a king
         if (piece.isKing()) {
             // Draw a crown image if piece is a king
-            Bitmap crownBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.king_crown);
+            @SuppressLint("DrawAllocation") Bitmap crownBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.king_crown);
             float centerX = pieceRect.centerX();
             float centerY = pieceRect.centerY();
             float radius = Math.min(pieceRect.width(), pieceRect.height()) / 4;
             float crownWidth = radius * 2; // Adjust size of the crown
             float crownHeight = crownWidth; // You can change this depending on the aspect ratio of your crown image
-            RectF crownRect = new RectF(centerX - crownWidth / 2, centerY - crownHeight / 2, centerX + crownWidth / 2, centerY + crownHeight / 2);
+            @SuppressLint("DrawAllocation") RectF crownRect = new RectF(centerX - crownWidth / 2, centerY - crownHeight / 2, centerX + crownWidth / 2, centerY + crownHeight / 2);
             canvas.drawBitmap(crownBitmap, null, crownRect, null); // Draw the crown bitmap
         }
     }

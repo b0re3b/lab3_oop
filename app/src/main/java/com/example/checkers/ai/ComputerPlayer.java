@@ -6,7 +6,7 @@ import com.example.checkers.model.Player;
 import com.example.checkers.utils.MoveValidator;
 
 public class ComputerPlayer extends Player {
-    private BasicStrategy strategy; // Використовуємо BasicStrategy
+    private final BasicStrategy strategy; // Використовуємо BasicStrategy
 
     // Конструктор
     public ComputerPlayer(String name, Piece.Color color, BasicStrategy basicStrategy) {

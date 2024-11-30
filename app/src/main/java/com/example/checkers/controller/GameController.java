@@ -9,8 +9,8 @@ import com.example.checkers.ai.ComputerPlayer;
 
 public class GameController {
     private Board board;
-    private Player humanPlayer;
-    private Player computerPlayer;
+    private final Player humanPlayer;
+    private final Player computerPlayer;
     private Player currentPlayer;
     private GameState gameState;
 
@@ -139,9 +139,9 @@ public class GameController {
 
     // Внутрішній клас для статистики гри
     public static class GameStatistics {
-        private int humanCapturedPieces;
-        private int computerCapturedPieces;
-        private GameState finalGameState;
+        private final int humanCapturedPieces;
+        private final int computerCapturedPieces;
+        private final GameState finalGameState;
 
         public GameStatistics(int humanCapturedPieces,
                               int computerCapturedPieces,

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 public class BasicStrategy implements AIStrategy {
-    private Random random = new Random();
+    private final Random random = new Random();
 
     @Override
     public Move chooseMove(Board board, Piece.Color aiColor) {
@@ -64,10 +64,6 @@ public class BasicStrategy implements AIStrategy {
         }
 
         // Destination має бути порожнім
-        if (board.getPieceAt(toRow, toCol) != null) {
-            return false;
-        }
-
-        return true;
+        return board.getPieceAt(toRow, toCol) == null;
     }
 }

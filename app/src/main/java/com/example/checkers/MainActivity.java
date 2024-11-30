@@ -1,12 +1,13 @@
 package com.example.checkers;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.checkers.model.Board;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.checkers.ai.ComputerPlayer;
 import com.example.checkers.ai.BasicStrategy;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Оновлення статусу гри
+    @SuppressLint("SetTextI18n")
     private void updateGameStatus() {
         switch (gameController.getGameState()) {
             case IN_PROGRESS:
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Збереження стану гри при зміні конфігурації
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         // Можна додати збереження стану гри
     }

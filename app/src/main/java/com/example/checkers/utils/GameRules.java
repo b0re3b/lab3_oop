@@ -9,8 +9,8 @@ public class GameRules {
     // Перевірка умов нічиєї
     public static boolean isDrawCondition(Board board) {
         return isStalemate(board) ||
-                isInsufficientMaterial(board) ||
-                isRepeatedPosition(board);
+                isInsufficientMaterial(board);
+
     }
 
     // Перевірка на pat (відсутність можливих ходів)
@@ -30,11 +30,6 @@ public class GameRules {
     }
 
     // Перевірка на повторення позиції
-    private static boolean isRepeatedPosition(Board board) {
-        // Складна логіка порівняння станів дошки
-        // Потребує введення механізму збереження історії ходів
-        return false; // Тимчасово
-    }
 
     // Підрахунок шашок певного кольору
     private static int countPieces(Board board, Piece.Color color) {
@@ -100,10 +95,6 @@ public class GameRules {
         }
 
         // Destination має бути порожнім
-        if (board.getPieceAt(toRow, toCol) != null) {
-            return false;
-        }
-
-        return true;
+        return board.getPieceAt(toRow, toCol) == null;
     }
 }

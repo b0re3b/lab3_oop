@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/game_background">
 
-    <!-- Game Status Text -->
     <TextView
         android:id="@+id/game_status_text"
         android:layout_width="0dp"
@@ -15,13 +15,13 @@
         android:padding="12dp"
         android:text="Гра не розпочата"
         android:textAlignment="center"
-        android:textColor="@android:color/white"
+        android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
-    <!-- Checkers Board View -->
     <com.example.checkers.view.BoardView
         android:id="@+id/board_view"
         android:layout_width="0dp"
@@ -37,6 +37,7 @@
     <!-- Button Container -->
     <LinearLayout
         android:id="@+id/button_container"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -45,26 +46,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- New Game Button -->
         <Button
             android:id="@+id/new_game_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="1"
             android:backgroundTint="#4CAF50"
             android:text="Нова гра"
-            android:textColor="@android:color/white" />
+            android:textColor="#263238"
+            tools:ignore="HardcodedText,VisualLintButtonSize" />
 
-        <!-- Surrender Button -->
         <Button
             android:id="@+id/surrender_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="1"
             android:backgroundTint="#F44336"
             android:text="Здатися"
-            android:textColor="@android:color/white" />
+            android:textColor="#000000"
+            tools:ignore="HardcodedText,VisualLintButtonSize" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

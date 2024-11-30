@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Board {
     private static final int BOARD_SIZE = 8;
-    private Piece[][] board;
+    private final Piece[][] board;
 
     // Конструктор для ініціалізації дошки
     public Board() {

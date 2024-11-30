@@ -1,8 +1,8 @@
 package com.example.checkers.model;
 
 public abstract class Player {
-    private String name;
-    private Piece.Color color;
+    private final String name;
+    private final Piece.Color color;
     private int capturedPieces;
 
     // Конструктор

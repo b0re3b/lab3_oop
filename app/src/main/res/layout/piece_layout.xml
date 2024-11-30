@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="4dp">
@@ -10,7 +11,8 @@
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:contentDescription="Checkers Piece" />
+        android:contentDescription="Checkers Piece"
+        tools:ignore="HardcodedText" />
 
     <ImageView
         android:id="@+id/kingIndicator"
@@ -19,5 +21,6 @@
         android:layout_gravity="top|end"
         android:src="@drawable/king_crown"
         android:visibility="gone"
-        android:contentDescription="King Piece Indicator" />
+        android:contentDescription="King Piece Indicator"
+        tools:ignore="HardcodedText" />
 </FrameLayout>
