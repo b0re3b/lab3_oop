@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Базовий стиль для додатку -->
+    <style name="Theme.Checkers" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Колір фону для вікон -->
+        <item name="android:windowBackground">@color/background_color</item>
+
+        <!-- Основний колір для елементів інтерфейсу -->
+        <item name="android:colorPrimary">@color/primary_color</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark_color</item>
+        <item name="android:colorAccent">@color/accent_color</item>
+
+        <!-- Основний колір тексту -->
+        <item name="android:textColorPrimary">@color/text_primary_color</item>
+        <item name="android:textColorSecondary">@color/text_secondary_color</item>
+
+        <!-- Колір фону для кнопок -->
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
+    </style>
+
+    <!-- Стиль для кнопок -->
+    <style name="ButtonStyle">
+        <item name="android:background">@color/button_background</item>
+        <item name="android:textColor">@color/button_text_color</item>
+    </style>
+</resources>

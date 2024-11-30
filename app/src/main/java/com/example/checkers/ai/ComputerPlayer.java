@@ -9,7 +9,7 @@ public class ComputerPlayer extends Player {
     private BasicStrategy strategy; // Використовуємо BasicStrategy
 
     // Конструктор
-    public ComputerPlayer(String name, Piece.Color color) {
+    public ComputerPlayer(String name, Piece.Color color, BasicStrategy basicStrategy) {
         super(name, color);
         this.strategy = new BasicStrategy(); // Ініціалізуємо конкретну стратегію
     }

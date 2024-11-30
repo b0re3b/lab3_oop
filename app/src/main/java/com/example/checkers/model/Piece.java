@@ -47,6 +47,10 @@ public class Piece {
     public boolean isAlive() {
         return isAlive;
     }
+    // Перевірка, чи є шашка білою
+    public boolean isWhite() {
+        return color == Color.WHITE;
+    }
 
     // Вбити шашку
     public void kill() {

@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.example.checkers.model.Board;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.checkers.ai.ComputerPlayer;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         BasicStrategy basicStrategy = new BasicStrategy();
         return new ComputerPlayer("Комп'ютер", Piece.Color.WHITE, basicStrategy);
     }
+
 
     // Обробка ходу гравця
     private void handlePlayerMove(int fromRow, int fromCol, int toRow, int toCol) {

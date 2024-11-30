@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="background_color">#FFFFFF</color> <!-- Білий колір фону -->
+    <color name="primary_color">#3F51B5</color> <!-- Основний колір (синій) -->
+    <color name="primary_dark_color">#303F9F</color> <!-- Темніший синій колір -->
+    <color name="accent_color">#FF4081</color> <!-- Колір акценту (рожевий) -->
+    <color name="text_primary_color">#000000</color> <!-- Чорний колір для основного тексту -->
+    <color name="text_secondary_color">#757575</color> <!-- Сірий колір для допоміжного тексту -->
+    <color name="button_background">#3F51B5</color> <!-- Колір фону кнопок -->
+    <color name="button_text_color">#FFFFFF</color> <!-- Колір тексту на кнопках -->
+    <color name="purple_500">#9C27B0</color>
+    <color name="purple_700">#7B1FA2</color>
+    <color name="white">#FFFFFF</color>
+    <color name="teal_200">#80CBC4</color>
+    <color name="teal_700">#00796B</color>
+    <color name="black">#000000</color>
+    <color name="purple_200">#CE93D8</color>
 </resources>
