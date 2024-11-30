@@ -17,6 +17,8 @@ import com.example.checkers.model.Piece;
 
 import androidx.annotation.Nullable;
 
+import java.util.List;
+
 public class BoardView extends View {
     // Board dimensions
     private static final int BOARD_SIZE = 8;
@@ -134,6 +136,11 @@ public class BoardView extends View {
                 if (piece != null) {
                     drawPiece(canvas, piece, row, col, squareSize);
                 }
+
+                // Draw possible moves
+                if (selectedRow == row && selectedCol == col) {
+                    drawPossibleMoves(canvas, row, col, squareSize);
+                }
             }
         }
 
@@ -173,6 +180,20 @@ public class BoardView extends View {
 
         canvas.drawPath(crownPath, crownPaint);
     }
+
+    // Draw possible moves
+    private void drawPossibleMoves(Canvas canvas, int row, int col, int squareSize) {
+        List<int[]> possibleMoves = board.getPossibleMoves(row, col);
+        for (int[] move : possibleMoves) {
+            int targetRow = move[0];
+            int targetCol = move[1];
+
+            float centerX = targetCol * squareSize + squareSize / 2f;
+            float centerY = targetRow * squareSize + squareSize / 2f;
+            canvas.drawCircle(centerX, centerY, squareSize / 4f, possibleMovePaint);
+        }
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

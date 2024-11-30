@@ -1,6 +1,7 @@
 package com.example.checkers.model;
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
     private static final int BOARD_SIZE = 8;
@@ -72,5 +73,39 @@ public class Board {
             }
         }
         return false;
+    }
+
+    // Отримати можливі ходи для фігури на заданій позиції
+    public List<int[]> getPossibleMoves(int row, int col) {
+        List<int[]> possibleMoves = new ArrayList<>();
+        Piece piece = getPieceAt(row, col);
+
+        if (piece == null) {
+            return possibleMoves; // Якщо немає фігури на цій клітинці, повертаємо порожній список
+        }
+
+        int direction = piece.getColor() == Piece.Color.WHITE ? -1 : 1; // Напрямок руху: для білих - вгору, для чорних - вниз
+
+        // Перевірка можливих простих рухів (по діагоналі)
+        // Зліва вгору (для білих) або справа вниз (для чорних)
+        if (isValidPosition(row + direction, col - 1) && getPieceAt(row + direction, col - 1) == null) {
+            possibleMoves.add(new int[]{row + direction, col - 1});
+        }
+        // Справа вгору (для білих) або зліва вниз (для чорних)
+        if (isValidPosition(row + direction, col + 1) && getPieceAt(row + direction, col + 1) == null) {
+            possibleMoves.add(new int[]{row + direction, col + 1});
+        }
+
+        // Перевірка можливих стрибків через фігури
+        // Стрибок через ліву фігуру
+        if (isValidPosition(row + 2 * direction, col - 2) && getPieceAt(row + direction, col - 1) != null && getPieceAt(row + direction, col - 1).getColor() != piece.getColor() && getPieceAt(row + 2 * direction, col - 2) == null) {
+            possibleMoves.add(new int[]{row + 2 * direction, col - 2});
+        }
+        // Стрибок через праву фігуру
+        if (isValidPosition(row + 2 * direction, col + 2) && getPieceAt(row + direction, col + 1) != null && getPieceAt(row + direction, col + 1).getColor() != piece.getColor() && getPieceAt(row + 2 * direction, col + 2) == null) {
+            possibleMoves.add(new int[]{row + 2 * direction, col + 2});
+        }
+
+        return possibleMoves;
     }
 }
