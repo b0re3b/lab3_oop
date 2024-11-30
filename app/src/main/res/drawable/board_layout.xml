@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Базовий фон деревини -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#D2691E"/> <!-- Darker wood color -->
+            <corners android:radius="8dp"/> <!-- Заокруглені кути -->
+        </shape>
+    </item>
+
+    <!-- Текстура деревини -->
+    <item>
+        <bitmap
+            android:src="@drawable/wood_texture"
+            android:tileMode="repeat"
+            android:alpha="0.3"/>
+    </item>
+
+    <!-- Шахматна сітка -->
+    <item>
+        <bitmap
+            android:src="@drawable/checkerboard_pattern"
+            android:tileMode="repeat"
+            android:alpha="0.2"/>
+    </item>
+</layer-list>
