@@ -1,26 +1,60 @@
 package com.example.checkers.model;
 
-public class Piece {
-    private boolean isWhite;  // колір шашки
-    private boolean isKing;   // чи є шашка дамкою
-    private int row;
-    private int col;
 
-    public Piece(boolean isWhite, int row, int col) {
-        this.isWhite = isWhite;
-        this.row = row;
-        this.col = col;
-        this.isKing = false;
+public class Piece {
+    // Enum для кольорів шашок
+    public enum Color {
+        WHITE, BLACK
     }
 
-    // Геттери та сеттери
-    public boolean isWhite() { return isWhite; }
-    public boolean isKing() { return isKing; }
-    public void makeKing() { this.isKing = true; }
-    public int getRow() { return row; }
-    public int getCol() { return col; }
-    public void move(int newRow, int newCol) {
-        this.row = newRow;
-        this.col = newCol;
+    // Enum для типів шашок
+    public enum Type {
+        REGULAR, KING
+    }
+
+    private Color color;
+    private Type type;
+    private boolean isAlive;
+
+    // Конструктор
+    public Piece(Color color) {
+        this.color = color;
+        this.type = Type.REGULAR;
+        this.isAlive = true;
+    }
+
+    // Getter для кольору
+    public Color getColor() {
+        return color;
+    }
+
+    // Getter для типу
+    public Type getType() {
+        return type;
+    }
+
+    // Перетворення на королеву
+    public void kingMe() {
+        this.type = Type.KING;
+    }
+
+    // Перевірка, чи є шашка королевою
+    public boolean isKing() {
+        return type == Type.KING;
+    }
+
+    // Getter для статусу життя
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    // Вбити шашку
+    public void kill() {
+        isAlive = false;
+    }
+
+    // Відродити шашку (якщо потрібно)
+    public void resurrect() {
+        isAlive = true;
     }
 }

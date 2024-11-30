@@ -1,120 +1,167 @@
 package com.example.checkers.controller;
 
+import com.example.checkers.model.Board;
+import com.example.checkers.model.Piece;
+import com.example.checkers.model.Player;
+import com.example.checkers.utils.GameRules;
+import com.example.checkers.utils.MoveValidator;
+import com.example.checkers.ai.ComputerPlayer;
+
 public class GameController {
-    private MoveValidator moveValidator;
-    private int currentPlayer;
-    private boolean gameOver;
-    private int boardSize;
+    private Board board;
+    private Player humanPlayer;
+    private Player computerPlayer;
+    private Player currentPlayer;
+    private GameState gameState;
 
-    // Слухачі для подій гри
-    private GameStateListener gameStateListener;
-    private MoveListener moveListener;
-
-    public interface GameStateListener {
-        void onGameWin(int player);
-        void onGameDraw();
+    // Enum для станів гри
+    public enum GameState {
+        NOT_STARTED,
+        IN_PROGRESS,
+        HUMAN_WON,
+        COMPUTER_WON,
+        DRAW
     }
 
-    public interface MoveListener {
-        void onMoveCompleted(int row, int col, int player);
+    // Конструктор
+    public GameController(Player humanPlayer, ComputerPlayer computerPlayer) {
+        this.board = new Board();
+        this.humanPlayer = humanPlayer;
+        this.computerPlayer = computerPlayer;
+        this.currentPlayer = humanPlayer; // Людина завжди ходить першою
+        this.gameState = GameState.NOT_STARTED;
     }
 
-    public GameController(int boardSize) {
-        this.boardSize = boardSize;
-        this.moveValidator = new MoveValidator(boardSize);
-        this.currentPlayer = 1; // Перший гравець починає
-        this.gameOver = false;
+    // Запуск гри
+    public void startGame() {
+        board = new Board(); // Скидаємо дошку
+        currentPlayer = humanPlayer;
+        gameState = GameState.IN_PROGRESS;
     }
 
-    /**
-     * Встановлення слухача стану гри
-     * @param listener слухач стану гри
-     */
-    public void setGameStateListener(GameStateListener listener) {
-        this.gameStateListener = listener;
-    }
-
-    /**
-     * Встановлення слухача ходів
-     * @param listener слухач ходів
-     */
-    public void setMoveListener(MoveListener listener) {
-        this.moveListener = listener;
-    }
-
-    /**
-     * Здійснення ходу
-     * @param row рядок ходу
-     * @param col стовпець ходу
-     * @return true, якщо хід успішний
-     */
-    public boolean makeMove(int row, int col) {
-        if (gameOver) {
+    // Обробка ходу гравця
+    public boolean processPlayerMove(int fromRow, int fromCol, int toRow, int toCol) {
+        // Перевірка, чи гра в процесі
+        if (gameState != GameState.IN_PROGRESS) {
             return false;
         }
 
-        if (moveValidator.makeMove(row, col, currentPlayer)) {
-            // Виклик слухача ходу
-            if (moveListener != null) {
-                moveListener.onMoveCompleted(row, col, currentPlayer);
-            }
+        // Перевірка валідності ходу
+        if (!MoveValidator.isValidMove(board, currentPlayer, fromRow, fromCol, toRow, toCol)) {
+            return false;
+        }
 
+        // Виконання ходу
+        boolean moveSuccess = currentPlayer.makeMove(board, fromRow, fromCol, toRow, toCol);
+
+        if (moveSuccess) {
             // Перевірка перемоги
-            if (moveValidator.checkWin(currentPlayer)) {
-                gameOver = true;
-                if (gameStateListener != null) {
-                    gameStateListener.onGameWin(currentPlayer);
-                }
-                return true;
-            }
+            updateGameState();
 
-            // Перевірка нічиєї
-            if (moveValidator.checkDraw()) {
-                gameOver = true;
-                if (gameStateListener != null) {
-                    gameStateListener.onGameDraw();
-                }
-                return true;
-            }
-
-            // Зміна гравця
-            currentPlayer = (currentPlayer == 1) ? 2 : 1;
+            // Зміна поточного гравця
+            switchPlayer();
 
             return true;
         }
+
         return false;
     }
 
-    /**
-     * Скидання гри
-     */
-    public void resetGame() {
-        moveValidator.resetBoard();
-        currentPlayer = 1;
-        gameOver = false;
+    // Хід комп'ютера
+    public void processComputerMove() {
+        // Логіка ходу комп'ютера
+        if (currentPlayer == computerPlayer && gameState == GameState.IN_PROGRESS) {
+            // Викликаємо AI стратегію комп'ютера
+            boolean moveSuccess = computerPlayer.makeMove(board, 0, 0, 0, 0);
+
+            if (moveSuccess) {
+                updateGameState();
+                switchPlayer();
+            }
+        }
     }
 
-    /**
-     * Отримання поточного гравця
-     * @return номер поточного гравця
-     */
-    public int getCurrentPlayer() {
+    // Оновлення стану гри
+    private void updateGameState() {
+        // Перевірка умов перемоги або нічиєї
+        if (!board.hasPiecesForColor(Piece.Color.WHITE)) {
+            gameState = GameState.COMPUTER_WON;
+        } else if (!board.hasPiecesForColor(Piece.Color.BLACK)) {
+            gameState = GameState.HUMAN_WON;
+        } else if (!humanPlayer.canMakeMove(board)) {
+            gameState = GameState.COMPUTER_WON;
+        } else if (!computerPlayer.canMakeMove(board)) {
+            gameState = GameState.HUMAN_WON;
+        }
+
+        // Додаткова перевірка на нічию (наприклад, за кількістю ходів)
+        if (GameRules.isDrawCondition(board)) {
+            gameState = GameState.DRAW;
+        }
+    }
+
+    // Зміна поточного гравця
+    private void switchPlayer() {
+        currentPlayer = (currentPlayer == humanPlayer)
+                ? computerPlayer
+                : humanPlayer;
+    }
+
+    // Getter для поточного стану гри
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    // Getter для поточного гравця
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
-    /**
-     * Перевірка, чи гра закінчена
-     * @return true, якщо гра завершена
-     */
-    public boolean isGameOver() {
-        return gameOver;
+    // Getter для ігрової дошки
+    public Board getBoard() {
+        return board;
     }
 
-    /**
-     * Отримання копії поточного стану дошки
-     * @return копія ігрової дошки
-     */
-    public int[][] getCurrentBoardState() {
-        return moveValidator.getBoard();
+    // Завершення гри
+    public void endGame() {
+        gameState = GameState.NOT_STARTED;
+        board = new Board();
+    }
+
+    // Отримати статистику гри
+    public GameStatistics getGameStatistics() {
+        return new GameStatistics(
+                humanPlayer.getCapturedPieces(),
+                computerPlayer.getCapturedPieces(),
+                gameState
+        );
+    }
+
+    // Внутрішній клас для статистики гри
+    public static class GameStatistics {
+        private int humanCapturedPieces;
+        private int computerCapturedPieces;
+        private GameState finalGameState;
+
+        public GameStatistics(int humanCapturedPieces,
+                              int computerCapturedPieces,
+                              GameState finalGameState) {
+            this.humanCapturedPieces = humanCapturedPieces;
+            this.computerCapturedPieces = computerCapturedPieces;
+            this.finalGameState = finalGameState;
+        }
+
+        // Getters
+        public int getHumanCapturedPieces() {
+            return humanCapturedPieces;
+        }
+
+        public int getComputerCapturedPieces() {
+            return computerCapturedPieces;
+        }
+
+        public GameState getFinalGameState() {
+            return finalGameState;
+        }
     }
 }

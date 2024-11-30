@@ -1,157 +1,145 @@
+package com.example.checkers;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.checkers.ai.BasicStrategy;
+import com.example.checkers.ai.AIStrategy;
+import com.example.checkers.controller.GameController;
+import com.example.checkers.model.Piece;
+import com.example.checkers.model.Player;
+import com.example.checkers.view.BoardView;
+
 public class MainActivity extends AppCompatActivity {
-    private static final int BOARD_SIZE = 15;
     private GameController gameController;
-    private Button[][] boardButtons;
-    private TextView playerTurnTextView;
-    private GridLayout gameGrid;
+    private BoardView boardView;
+    private TextView gameStatusText;
+    private Button newGameButton;
+    private Button surrenderButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Ініціалізація контролера гри
-        gameController = new GameController(BOARD_SIZE);
+        // Ініціалізація UI компонентів
+        initializeUIComponents();
 
-        // Налаштування текстового поля статусу гравця
-        playerTurnTextView = findViewById(R.id.player_turn_text_view);
+        // Створення гравців
+        Player humanPlayer = createHumanPlayer();
+        Player computerPlayer = createComputerPlayer();
 
-        // Налаштування ігрової сітки
-        gameGrid = findViewById(R.id.game_grid);
-        gameGrid.setColumnCount(BOARD_SIZE);
-        gameGrid.setRowCount(BOARD_SIZE);
+        // Створення контролера гри
+        gameController = new GameController(humanPlayer, (ComputerPlayer) computerPlayer);
 
-        // Створення кнопок для гральної дошки
-        boardButtons = new Button[BOARD_SIZE][BOARD_SIZE];
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                Button button = createBoardButton(row, col);
-                gameGrid.addView(button);
-                boardButtons[row][col] = button;
-            }
-        }
+        // Налаштування BoardView
+        boardView.setGameController(gameController);
+        boardView.setOnMoveListener(this::handlePlayerMove);
 
-        // Налаштування слухачів
-        setupGameListeners();
+        // Додавання слухачів подій для кнопок
+        setupButtonListeners();
 
-        // Кнопка скидання гри
-        Button resetButton = findViewById(R.id.reset_button);
-        resetButton.setOnClickListener(v -> resetGame());
-
-        // Оновлення статусу гравця
-        updatePlayerTurnText();
+        // Старт гри
+        startNewGame();
     }
 
-    /**
-     * Створення кнопки для клітинки на ігровій дошці
-     * @param row рядок кнопки
-     * @param col стовпець кнопки
-     * @return кнопка для ходу
-     */
-    private Button createBoardButton(int row, int col) {
-        Button button = new Button(this);
-
-        // Налаштування параметрів кнопки
-        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.width = 0;
-        params.height = 0;
-        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-        params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-        button.setLayoutParams(params);
-
-        // Додавання обробника кліку
-        button.setOnClickListener(v -> onBoardCellClicked(row, col));
-
-        return button;
+    // Ініціалізація UI компонентів
+    private void initializeUIComponents() {
+        setContentView(R.layout.activity_main);
+        boardView = findViewById(R.id.board_view);
+        gameStatusText = findViewById(R.id.game_status_text);
+        newGameButton = findViewById(R.id.new_game_button);
+        surrenderButton = findViewById(R.id.surrender_button);
     }
 
-    /**
-     * Обробка кліку на клітинці дошки
-     * @param row рядок
-     * @param col стовпець
-     */
-    private void onBoardCellClicked(int row, int col) {
-        if (gameController.makeMove(row, col)) {
-            // Хід успішний, оновлення UI
-            updateBoardUI();
-        } else {
-            // Показ повідомлення про неправильний хід
-            Toast.makeText(this, "Неправильний хід!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * Налаштування слухачів контролера гри
-     */
-    private void setupGameListeners() {
-        gameController.setGameStateListener(new GameController.GameStateListener() {
+    // Створення гравця-людини
+    private Player createHumanPlayer() {
+        return new Player("Гравець", Piece.Color.BLACK) {
             @Override
-            public void onGameWin(int player) {
-                // Показ повідомлення про перемогу
-                runOnUiThread(() -> {
-                    Toast.makeText(MainActivity.this,
-                            "Гравець " + player + " переміг!",
-                            Toast.LENGTH_LONG).show();
-                    disableBoardButtons();
-                });
+            public boolean makeMove(Board board, int fromRow, int fromCol, int toRow, int toCol) {
+                // Реалізація ходу гравця-людини
+                return true;
             }
+        };
+    }
 
-            @Override
-            public void onGameDraw() {
-                // Показ повідомлення про нічию
-                runOnUiThread(() -> {
-                    Toast.makeText(MainActivity.this,
-                            "Нічия!",
-                            Toast.LENGTH_LONG).show();
-                    disableBoardButtons();
-                });
-            }
-        });
-
-        gameController.setMoveListener((row, col, player) ->
-                runOnUiThread(() -> {
-                    // Оновлення кнопки після ходу
-                    Button button = boardButtons[row][col];
-                    button.setText(String.valueOf(player));
-                    button.setEnabled(false);
-                    updatePlayerTurnText();
-                })
+    // Створення комп'ютерного гравця
+    private Player createComputerPlayer() {
+        AIStrategy aiStrategy = new BasicAIStrategy();
+        return new ComputerPlayer(
+                "Комп'ютер",
+                Piece.Color.WHITE,
+                aiStrategy,
+                AIStrategy.Difficulty.MEDIUM
         );
     }
 
-    /**
-     * Оновлення тексту статусу поточного гравця
-     */
-    private void updatePlayerTurnText() {
-        int currentPlayer = gameController.getCurrentPlayer();
-        playerTurnTextView.setText("Хід гравця " + currentPlayer);
-    }
+    // Обробка ходу гравця
+    private void handlePlayerMove(int fromRow, int fromCol, int toRow, int toCol) {
+        boolean moveSuccessful = gameController.processPlayerMove(fromRow, fromCol, toRow, toCol);
 
-    /**
-     * Оновлення UI ігрової дошки
-     */
-    private void updateBoardUI() {
-        int[][] boardState = gameController.getCurrentBoardState();
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                Button button = boardButtons[row][col];
-                if (boardState[row][col] != 0) {
-                    button.setText(String.valueOf(boardState[row][col]));
-                    button.setEnabled(false);
-                }
-            }
+        if (moveSuccessful) {
+            updateGameStatus();
+
+            // Хід комп'ютера
+            gameController.processComputerMove();
+
+            updateGameStatus();
+        } else {
+            Toast.makeText(this, "Невірний хід", Toast.LENGTH_SHORT).show();
         }
     }
 
-    /**
-     * Вимкнення кнопок дошки після закінчення гри
-     */
-    private void disableBoardButtons() {
+    // Налаштування слухачів для кнопок
+    private void setupButtonListeners() {
+        newGameButton.setOnClickListener(v -> startNewGame());
+
+        surrenderButton.setOnClickListener(v -> {
+            gameController.endGame();
+            Toast.makeText(this, "Ви здалися!", Toast.LENGTH_SHORT).show();
+            updateGameStatus();
+        });
+    }
+
+    // Початок нової гри
+    private void startNewGame() {
+        gameController.startGame();
+        boardView.resetBoard();
+        updateGameStatus();
+    }
+
+    // Оновлення статусу гри
+    private void updateGameStatus() {
+        switch (gameController.getGameState()) {
+            case IN_PROGRESS:
+                String currentPlayer = gameController.getCurrentPlayer() instanceof ComputerPlayer
+                        ? "Комп'ютер"
+                        : "Гравець";
+                gameStatusText.setText("Хід: " + currentPlayer);
+                break;
+            case HUMAN_WON:
+                gameStatusText.setText("Ви перемогли!");
+                break;
+            case COMPUTER_WON:
+                gameStatusText.setText("Комп'ютер переміг!");
+                break;
+            case DRAW:
+                gameStatusText.setText("Нічия!");
+                break;
+            default:
+                gameStatusText.setText("Гра не розпочата");
+        }
+    }
+
+    // Збереження стану гри при зміні конфігурації
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Можна додати збереження стану гри
+    }
+}

@@ -1,143 +1,101 @@
 package com.example.checkers.utils;
 
+import com.example.checkers.model.Board;
+import com.example.checkers.model.Piece;
+import com.example.checkers.model.Player;
+
 public class MoveValidator {
-    private int[][] gameBoard;
-    private int boardSize;
-
-    public MoveValidator(int boardSize) {
-        this.boardSize = boardSize;
-        this.gameBoard = new int[boardSize][boardSize];
-    }
-
-    /**
-     * Перевіряє, чи є хід допустимим
-     * @param row рядок ходу
-     * @param col стовпець ходу
-     * @return true, якщо хід допустимий, інакше false
-     */
-    public boolean isMoveValid(int row, int col) {
+    // Перевірка валідності ходу
+    public static boolean isValidMove(Board board, Player player,
+                                      int fromRow, int fromCol,
+                                      int toRow, int toCol) {
         // Перевірка меж дошки
-        if (row < 0 || row >= boardSize || col < 0 || col >= boardSize) {
+        if (!isWithinBoardBounds(fromRow, fromCol, toRow, toCol)) {
             return false;
         }
 
-        // Перевірка, чи клітинка вже зайнята
-        return gameBoard[row][col] == 0;
+        Piece piece = board.getPieceAt(fromRow, fromCol);
+
+        // Перевірка наявності шашки
+        if (piece == null || piece.getColor() != player.getColor()) {
+            return false;
+        }
+
+        // Перевірка напрямку руху
+        if (!isValidMoveDirection(piece, fromRow, fromCol, toRow, toCol)) {
+            return false;
+        }
+
+        // Перевірка відстані руху
+        if (!isValidMoveDistance(piece, fromRow, fromCol, toRow, toCol)) {
+            return false;
+        }
+
+        // Перевірка захоплення шашок
+        return isValidCapture(board, piece, fromRow, fromCol, toRow, toCol);
     }
 
-    /**
-     * Здійснює хід на дошці
-     * @param row рядок ходу
-     * @param col стовпець ходу
-     * @param player гравець (1 або 2)
-     * @return true, якщо хід успішний
-     */
-    public boolean makeMove(int row, int col, int player) {
-        if (isMoveValid(row, col)) {
-            gameBoard[row][col] = player;
+    // Перевірка меж дошки
+    private static boolean isWithinBoardBounds(int fromRow, int fromCol,
+                                               int toRow, int toCol) {
+        return fromRow >= 0 && fromRow < 8 &&
+                fromCol >= 0 && fromCol < 8 &&
+                toRow >= 0 && toRow < 8 &&
+                toCol >= 0 && toCol < 8;
+    }
+
+    // Перевірка напрямку руху
+    private static boolean isValidMoveDirection(Piece piece,
+                                                int fromRow, int fromCol,
+                                                int toRow, int toCol) {
+        // Для королеви дозволені всі напрямки
+        if (piece.isKing()) {
+            return Math.abs(fromRow - toRow) == Math.abs(fromCol - toCol);
+        }
+
+        // Для звичайних шашок - тільки вперед
+        int direction = piece.getColor() == Piece.Color.WHITE ? 1 : -1;
+        return (toRow - fromRow) == direction;
+    }
+
+    // Перевірка відстані руху
+    private static boolean isValidMoveDistance(Piece piece,
+                                               int fromRow, int fromCol,
+                                               int toRow, int toCol) {
+        int rowDiff = Math.abs(toRow - fromRow);
+        int colDiff = Math.abs(toCol - fromCol);
+
+        // Звичайний хід на одну клітинку
+        if (rowDiff == 1 && colDiff == 1) {
             return true;
         }
-        return false;
-    }
 
-    /**
-     * Перевіряє перемогу гравця
-     * @param player гравець (1 або 2)
-     * @return true, якщо гравець переміг
-     */
-    public boolean checkWin(int player) {
-        // Перевірка рядків
-        for (int row = 0; row < boardSize; row++) {
-            int count = 0;
-            for (int col = 0; col < boardSize; col++) {
-                if (gameBoard[row][col] == player) {
-                    count++;
-                    if (count == 5) return true;
-                } else {
-                    count = 0;
-                }
-            }
-        }
-
-        // Перевірка стовпців
-        for (int col = 0; col < boardSize; col++) {
-            int count = 0;
-            for (int row = 0; row < boardSize; row++) {
-                if (gameBoard[row][col] == player) {
-                    count++;
-                    if (count == 5) return true;
-                } else {
-                    count = 0;
-                }
-            }
-        }
-
-        // Перевірка діагоналей зліва направо
-        for (int k = 0; k < 2 * boardSize - 1; k++) {
-            int count = 0;
-            for (int row = 0; row < boardSize; row++) {
-                int col = k - row;
-                if (col >= 0 && col < boardSize) {
-                    if (gameBoard[row][col] == player) {
-                        count++;
-                        if (count == 5) return true;
-                    } else {
-                        count = 0;
-                    }
-                }
-            }
-        }
-
-        // Перевірка діагоналей справа наліво
-        for (int k = 0; k < 2 * boardSize - 1; k++) {
-            int count = 0;
-            for (int row = 0; row < boardSize; row++) {
-                int col = boardSize - 1 - (k - row);
-                if (col >= 0 && col < boardSize) {
-                    if (gameBoard[row][col] == player) {
-                        count++;
-                        if (count == 5) return true;
-                    } else {
-                        count = 0;
-                    }
-                }
-            }
+        // Захоплення шашки (стрибок через шашку)
+        if (rowDiff == 2 && colDiff == 2) {
+            return true;
         }
 
         return false;
     }
 
-    /**
-     * Перевіряє нічию
-     * @return true, якщо дошка заповнена
-     */
-    public boolean checkDraw() {
-        for (int row = 0; row < boardSize; row++) {
-            for (int col = 0; col < boardSize; col++) {
-                if (gameBoard[row][col] == 0) {
-                    return false;
-                }
-            }
+    // Перевірка захоплення шашок
+    private static boolean isValidCapture(Board board, Piece piece,
+                                          int fromRow, int fromCol,
+                                          int toRow, int toCol) {
+        // Якщо хід на одну клітинку - без захоплення
+        if (Math.abs(fromRow - toRow) == 1) {
+            return board.getPieceAt(toRow, toCol) == null;
         }
-        return true;
-    }
 
-    /**
-     * Скидає дошку до початкового стану
-     */
-    public void resetBoard() {
-        gameBoard = new int[boardSize][boardSize];
-    }
+        // Перевірка захоплення шашки
+        int capturedRow = (fromRow + toRow) / 2;
+        int capturedCol = (fromCol + toCol) / 2;
 
-    /**
-     * Отримує поточний стан дошки
-     * @return копія ігрової дошки
-     */
-    public int[][] getBoard() {
-        int[][] boardCopy = new int[boardSize][boardSize];
-        for (int i = 0; i < boardSize; i++) {
-            System.arraycopy(gameBoard[i], 0, boardCopy[i], 0, boardSize);
-        }
-        return boardCopy;
+        Piece capturedPiece = board.getPieceAt(capturedRow, capturedCol);
+
+        // Має бути шашка іншого кольору
+        return capturedPiece != null &&
+                capturedPiece.getColor() != piece.getColor() &&
+                board.getPieceAt(toRow, toCol) == null;
     }
 }
